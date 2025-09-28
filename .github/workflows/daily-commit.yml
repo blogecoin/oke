@@ -1,10 +1,10 @@
-name: Daily Auto Commit
+name: 🤖 Autonomous Daily Bot
 
 on:
   schedule:
-    # Runs at 00:00 UTC every day
+    # Runs at 00:00 UTC every day - completely autonomous
     - cron: '0 0 * * *'
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch: # Allow manual trigger for testing
 
 jobs:
   daily-commit:
@@ -26,10 +26,10 @@ jobs:
         git config --global user.name "blogecoin"
         git config --global user.email "blogecoin.reviews@gmail.com"
 
-    - name: Update log file
+    - name: 🤖 Autonomous Log Update
       run: |
         cd daily-logs
-        echo "Update at $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> log.txt
+        echo "🤖 Autonomous update at $(date -u '+%Y-%m-%d %H:%M:%S UTC') - Bot running independently" >> log.txt
 
     - name: Commit and push changes
       run: |
@@ -38,7 +38,7 @@ jobs:
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
-          git commit -m "update $(date -u '+%Y%m%d_%H%M%S')"
+          git commit -m "🤖 autonomous update $(date -u '+%Y%m%d_%H%M%S') - bot self-executing"
           git push origin main
         fi
       env:
