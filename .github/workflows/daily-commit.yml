@@ -1,0 +1,45 @@
+name: Daily Auto Commit
+
+on:
+  schedule:
+    # Runs at 00:00 UTC every day
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  daily-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "blogecoin"
+        git config --global user.email "blogecoin.reviews@gmail.com"
+
+    - name: Update log file
+      run: |
+        cd daily-logs
+        echo "Update at $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> log.txt
+
+    - name: Commit and push changes
+      run: |
+        cd daily-logs
+        git add log.txt
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "update $(date -u '+%Y%m%d_%H%M%S')"
+          git push origin main
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
